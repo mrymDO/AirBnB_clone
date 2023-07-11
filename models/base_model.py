@@ -17,8 +17,7 @@ class BaseModel():
                 if key == "__class__":
                     continue
                 if key == "created_at" or key == "updated_at":
-                    self.__setattr__(key,  datetime.strptime(
-                        value, "%Y-%m-%dT%H:%M:%S.%f"))
+                    self.__setattr__(key,  datetime.fromisoformat(value))
                     continue
                 self.__setattr__(key, value)
         else:
