@@ -3,6 +3,7 @@
 
 import unittest
 from models.base_model import BaseModel
+import models.base_model as module
 from datetime import datetime
 from copy import deepcopy
 
@@ -12,8 +13,9 @@ class TestBaseModel(unittest.TestCase):
 
     def test_doc_string(self):
         """ Test if doc string exist """
+        self.assertNotEqual(module.__doc__, None)
         self.assertNotEqual(BaseModel.__doc__, None)
-        self.assertNotEqual(models.base_model.__doc__, None)
+
     def test_attributes(self):
         """Test attributes of BaseModel"""
         my_model = BaseModel()
@@ -38,9 +40,9 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(model_dict, dict)
         self.assertEqual(model_dict['id'], my_model.id)
         self.assertEqual(
-                model_dict['created_at'], my_model.created_at.isoformat())
+            model_dict['created_at'], my_model.created_at.isoformat())
         self.assertEqual(
-                model_dict['updated_at'], my_model.updated_at.isoformat())
+            model_dict['updated_at'], my_model.updated_at.isoformat())
         self.assertEqual(model_dict['__class__'], my_model.__class__.__name__)
 
     def test_str(self):
@@ -48,8 +50,15 @@ class TestBaseModel(unittest.TestCase):
         my_model = BaseModel()
         model_str = str(my_model)
         expected_str = "[{}] ({}) {}".format(
-                my_model.__class__.__name__, my_model.id, my_model.__dict__)
+            my_model.__class__.__name__, my_model.id, my_model.__dict__)
         self.assertEqual(model_str, expected_str)
+
+    def test_kwarg(self):
+        """Create Object from dictionary"""
+        my_model = BaseModel()
+        model_dict = my_model.to_dict()
+        my_new_model = BaseModel(model_dict)
+        self.assertEqual(my_model, my_new_model)
 
 
 if __name__ == '__main__':
