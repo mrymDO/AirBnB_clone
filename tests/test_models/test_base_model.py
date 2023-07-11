@@ -53,6 +53,13 @@ class TestBaseModel(unittest.TestCase):
             my_model.__class__.__name__, my_model.id, my_model.__dict__)
         self.assertEqual(model_str, expected_str)
 
+    def test_kwarg(self):
+        """Create Object from dictionary"""
+        my_model = BaseModel()
+        model_dict = my_model.to_dict()
+        my_new_model = BaseModel(model_dict)
+        self.assertEqual(my_model, my_new_model)
+
 
 if __name__ == '__main__':
     unittest.main()
