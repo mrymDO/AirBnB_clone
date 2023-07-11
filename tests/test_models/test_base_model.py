@@ -57,8 +57,8 @@ class TestBaseModel(unittest.TestCase):
         """Create Object from dictionary"""
         my_model = BaseModel()
         model_dict = my_model.to_dict()
-        my_new_model = BaseModel(model_dict)
-        self.assertEqual(my_model, my_new_model)
+        my_new_model = BaseModel(**model_dict)
+        self.assertEqual(my_model.id, my_new_model.id)
 
 
 if __name__ == '__main__':
