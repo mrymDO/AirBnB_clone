@@ -13,6 +13,7 @@ class TestBaseModel(unittest.TestCase):
     def test_doc_string(self):
         """ Test if doc string exist """
         self.assertNotEqual(BaseModel.__doc__, None)
+        self.assertNotEqual(models.base_model.__doc__, None)
     def test_attributes(self):
         """Test attributes of BaseModel"""
         my_model = BaseModel()
