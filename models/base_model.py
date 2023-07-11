@@ -12,12 +12,13 @@ class BaseModel():
 
     def __init__(self, *args, **kwargs):
         """Initialize a BaseModel instance"""
-        if kwargs:
+
+        if len(kwargs.items()) > 0:
             for key, value in kwargs.items():
                 if key == "__class__":
                     continue
                 if key == "created_at" or key == "updated_at":
-                    self.__setattr__(key,  datetime(value))
+                    self.__setattr__(key,  datetime.fromisoformat(value))
                     continue
                 self.__setattr__(key, value)
         else:
