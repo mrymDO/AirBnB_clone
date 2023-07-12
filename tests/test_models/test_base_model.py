@@ -62,6 +62,7 @@ class TestBaseModel(unittest.TestCase):
         model_dict = my_model.to_dict()
         my_new_model = BaseModel(**model_dict)
         self.assertEqual(my_model.id, my_new_model.id)
+
         self.assertEqual(my_model.created_at, my_new_model.created_at)
         self.assertEqual(my_model.updated_at, my_new_model.updated_at)
         self.assertEqual(
@@ -73,6 +74,7 @@ class TestBaseModel(unittest.TestCase):
 
         self.assertIsInstance(my_new_model.created_at, datetime)
         self.assertIsInstance(my_new_model.updated_at, datetime)
+
 
 
 if __name__ == '__main__':
