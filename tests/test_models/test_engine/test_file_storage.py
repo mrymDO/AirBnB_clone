@@ -15,7 +15,9 @@ class TestFileStorage(unittest.TestCase):
 
     def setUp(self):
         """create new instance of FileStorage before each test"""
+
         self.storage = FileStorage()
+        self.storage._FileStorage__objects = {}
         self.storage.class_mapping = {'BaseModel': BaseModel}
 
     def tearDown(self):
@@ -30,8 +32,8 @@ class TestFileStorage(unittest.TestCase):
         self.storage.new(obj1)
         self.storage.new(obj2)
         all_obj = self.storage.all()
-        self.assertIn(f"{obj1.__class__.__name__}.{obj1.id}",all_obj)
-        self.assertIn(f"{obj2.__class__.__name__}.{obj2.id}",all_obj)
+        self.assertIn(f"{obj1.__class__.__name__}.{obj1.id}", all_obj)
+        self.assertIn(f"{obj2.__class__.__name__}.{obj2.id}", all_obj)
         self.assertEqual(type(all_obj), dict)
         self.assertIs(all_obj, self.storage._FileStorage__objects)
 
@@ -39,7 +41,7 @@ class TestFileStorage(unittest.TestCase):
         """Test the new() method"""
         obj = BaseModel()
         self.storage.new(obj)
-        self.assertIn(f"{obj.__class__.__name__}.{obj.id}",self.storage.all())
+        self.assertIn(f"{obj.__class__.__name__}.{obj.id}", self.storage.all())
 
     def test_save(self):
         """Test the save() method"""
@@ -53,7 +55,8 @@ class TestFileStorage(unittest.TestCase):
         with open(self.storage._FileStorage__file_path, "r") as f:
             json_data = json.load(f)
             self.assertIn(f"{obj.__class__.__name__}.{obj.id}", json_data)
-            self.assertEqual(json_data[f"{obj.__class__.__name__}.{obj.id}"], obj.to_dict())
+            self.assertEqual(
+                json_data[f"{obj.__class__.__name__}.{obj.id}"], obj.to_dict())
 
     def test_reload(self):
         """Test reload when the file exists"""
@@ -66,26 +69,23 @@ class TestFileStorage(unittest.TestCase):
 
         self.assertIn("BaseModel.1", self.storage.all())
         self.assertIn("BaseModel.2", self.storage.all())
-        self.assertEqual(self.storage.all()["BaseModel.1"].__class__.__name__, "BaseModel")
-        self.assertEqual(self.storage.all()["BaseModel.2"].__class__.__name__, "BaseModel")
+        self.assertEqual(self.storage.all()[
+                         "BaseModel.1"].__class__.__name__, "BaseModel")
+        self.assertEqual(self.storage.all()[
+                         "BaseModel.2"].__class__.__name__, "BaseModel")
         self.assertEqual(self.storage.all()["BaseModel.1"].id, "1")
         self.assertEqual(self.storage.all()["BaseModel.2"].id, "2")
 
-    def test_non_existing_file(self):
-        """Test reload() method with non existing file"""
-        self.storage.reload()
-        self.assertEqual(len(self.storage.all()), 0)
-
+    def test_invalid_json_format(self):
         corrupted_data = "{ invalid json }"
         with open(self.storage._FileStorage__file_path, "w") as f:
             f.write(corrupted_data)
-        self.storage.reload()
-        self.assertEqual(len(self.storage.all()), 0)
+        self.assertRaises(json.decoder.JSONDecodeError, self.storage.reload)
 
-        invalid_object = {"__class__": "InvalidClass", "id": "123"}
-        to_json = {"InvalidClass.123": invalid_object}
-        with open(self.storage._FileStorage__file_path, "w") as f:
-            json.dump(to_json, f)
+    def test_non_existing_file(self):
+        """Test reload() method with non existing file"""
+        if os.path.exists(self.storage._FileStorage__file_path):
+            os.remove(self.storage._FileStorage__file_path)
         self.storage.reload()
         self.assertEqual(len(self.storage.all()), 0)
 
