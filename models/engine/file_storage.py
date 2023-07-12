@@ -13,8 +13,8 @@ class FileStorage:
     __objects = {}
 
     class_mapping = {
-            'BaseModel': BaseModel,
-            }
+        'BaseModel': BaseModel,
+    }
 
     def all(self):
         """return the dictionary __objects"""
