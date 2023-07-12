@@ -45,6 +45,9 @@ class TestBaseModel(unittest.TestCase):
             model_dict['updated_at'], my_model.updated_at.isoformat())
         self.assertEqual(model_dict['__class__'], my_model.__class__.__name__)
 
+        self.assertIsInstance(model_dict.get("created_at"), str)
+        self.assertIsInstance(model_dict.get("updated_at"), str)
+
     def test_str(self):
         """test str method"""
         my_model = BaseModel()
@@ -59,6 +62,19 @@ class TestBaseModel(unittest.TestCase):
         model_dict = my_model.to_dict()
         my_new_model = BaseModel(**model_dict)
         self.assertEqual(my_model.id, my_new_model.id)
+
+        self.assertEqual(my_model.created_at, my_new_model.created_at)
+        self.assertEqual(my_model.updated_at, my_new_model.updated_at)
+        self.assertEqual(
+                my_model.__class__.__name__, my_new_model.__class__.__name__)
+
+        self.assertIsInstance(my_new_model, BaseModel)
+        self.assertNotEqual(my_model, my_new_model)
+        self.assertNotEqual(id(my_model), id(my_new_model))
+
+        self.assertIsInstance(my_new_model.created_at, datetime)
+        self.assertIsInstance(my_new_model.updated_at, datetime)
+
 
 
 if __name__ == '__main__':
