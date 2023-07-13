@@ -5,7 +5,7 @@ import cmd
 from models.base_model import BaseModel
 import models
 import re
-import math
+import shlex
 
 
 class HBNBCommand(cmd.Cmd):
@@ -69,7 +69,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
         elif len(args) == 1:
-            if args[0] not in self.class_mapping:
+            if args[0] in self.class_mapping:
                 print("** instance id missing **")
             else:
                 print("** class doesn't exist **")
@@ -104,52 +104,47 @@ class HBNBCommand(cmd.Cmd):
         print(list_objs)
 
     def do_update(self, args):
-        args_list = args.split()
-        args_len = len(args_list)
-        conversion_dict = {
-            "str": str,
-            "int": lambda x: int(math.trunc(float(x))),
-            "float": float
-        }
-        # handle missing args
+        tokens = shlex.split(args)
+        args_len = len(tokens)
+
         if args_len == 0:
             print("** class name missing **")
             return
+        class_name = tokens[0]
         if args_len == 1:
-            print("** instance id missing **")
+            if class_name not in self.class_mapping:
+                print("** class doesn't exist **")
+            else:
+                print("** instance id missing **")
             return
+        id = tokens[1]
+        instance = self.get_by_id(class_name, id)
         if args_len == 2:
-            print("** attribute name missing **")
+            if instance == False:
+                print("** no instance found **")
+            else:
+                print("** attribute name missing **")
             return
+
         if args_len == 3:
             print("** value missing **")
             return
 
-        class_name, id, name, *value = args_list
-        if class_name not in self.class_mapping:
-            print("** class doesn't exist **")
-            return
-        # check if obj exist
-        obj = self.get_by_id(class_name, id)
-        if obj == False:
-            print("** no instance found **")
-            return
-        # check if attribuet already exist then cast
-        if hasattr(obj, name):
-            attr = getattr(obj, name)
-            attr_type = attr.__class__.__name__
-            new_val = " ".join(value)
-            result = self.handle_type(new_val)
-            val_to_insert = conversion_dict[attr_type](result['val'])
-            setattr(obj, name, val_to_insert)
-            obj.save()
-            return
-        # for string in double qoutes
-        new_val = " ".join(value)
-        result = self.handle_type(new_val)
-        val_to_insert = conversion_dict[result['type']](result['val'])
-        setattr(obj, name, val_to_insert)
-        obj.save()
+        attribute_name = tokens[2]
+        attribute_value = tokens[3]
+        type_attrb_val = self.handle_type(attribute_value)
+
+        if hasattr(instance, attribute_name):
+            instance_attr_type = getattr(
+                instance, attribute_name).__class__.__name__
+            if instance_attr_type == type_attrb_val["type"].__name__:
+                setattr(instance, attribute_name,
+                        type_attrb_val["type"](attribute_value))
+                instance.save()
+        else:
+            setattr(instance, attribute_name,
+                    type_attrb_val["type"](attribute_value))
+            instance.save()
 
     def is_float(self, num):
         try:
@@ -166,16 +161,16 @@ class HBNBCommand(cmd.Cmd):
 
     def handle_type(self, string):
         result = {}
-        if string[0] == '"' or string[0].isalpha():
+        if string[0].isalpha():
             result["val"] = self.get_str(string)
-            result["type"] = "str"
+            result["type"] = str
             return result
         value = string.split()[0]
         result["val"] = value
         if self.is_float(value) == True:
-            result["type"] = "float"
+            result["type"] = float
         else:
-            result["type"] = "int"
+            result["type"] = int
         return result
 
     def get_by_id(self, class_name, id):
