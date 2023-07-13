@@ -4,6 +4,7 @@
 import cmd
 from models.base_model import BaseModel
 import models
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -100,6 +101,62 @@ class HBNBCommand(cmd.Cmd):
         for key, value in all_objs:
             list_objs.append(str(value))
         print(list_objs)
+
+    def do_update(self, args):
+        args_list = args.split()
+        args_len = len(args_list)
+
+        # handle missing args
+        if args_len == 0:
+            print("** class name missing **")
+            return
+        if args_len == 1:
+            print("** instance id missing **")
+            return
+        if args_len == 2:
+            print("** attribute name missing **")
+            return
+        if args_len == 3:
+            print("** value missing **")
+            return
+
+        class_name, id, name, *value = args_list
+        if class_name not in self.class_mapping:
+            print("** class doesn't exist **")
+            return
+        # check if obj exist
+        obj = self.get_by_id(class_name, id)
+        if obj == False:
+            print("** no instance found **")
+            return
+
+        # for string in double qoutes
+        new_val = " ".join(value)
+        if new_val[0] == '"':
+            new_val = re.search('"[^"]*"', new_val).group()[1:-1]
+            setattr(obj, name, new_val)
+            obj.save()
+            return
+        new_val = value[0]
+        if self.is_float(new_val) == True:
+            setattr(obj, name, float(new_val))
+        else:
+            setattr(obj, name, int(new_val))
+        obj.save()
+
+    def is_float(self, num):
+        try:
+            int(num)
+            return False
+        except ValueError:
+            return True
+
+    def get_by_id(self, class_name, id):
+        """ return obj if exist in storage otherwise return False"""
+        key = f"{class_name}.{id}"
+        if key in models.storage.all():
+            return models.storage.all()[key]
+        return False
 
 
 if __name__ == '__main__':
