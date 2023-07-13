@@ -5,6 +5,7 @@ import cmd
 from models.base_model import BaseModel
 import models
 import re
+import math
 
 
 class HBNBCommand(cmd.Cmd):
@@ -105,7 +106,11 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, args):
         args_list = args.split()
         args_len = len(args_list)
-
+        conversion_dict = {
+            "str": str,
+            "int": lambda x: int(math.trunc(float(x))),
+            "float": float
+        }
         # handle missing args
         if args_len == 0:
             print("** class name missing **")
@@ -129,19 +134,21 @@ class HBNBCommand(cmd.Cmd):
         if obj == False:
             print("** no instance found **")
             return
-
-        # for string in double qoutes
-        new_val = " ".join(value)
-        if new_val[0] == '"':
-            new_val = re.search('"[^"]*"', new_val).group()[1:-1]
-            setattr(obj, name, new_val)
+        # check if attribuet already exist then cast
+        if hasattr(obj, name):
+            attr = getattr(obj, name)
+            attr_type = attr.__class__.__name__
+            new_val = " ".join(value)
+            result = self.handle_type(new_val)
+            val_to_insert = conversion_dict[attr_type](result['val'])
+            setattr(obj, name, val_to_insert)
             obj.save()
             return
-        new_val = value[0]
-        if self.is_float(new_val) == True:
-            setattr(obj, name, float(new_val))
-        else:
-            setattr(obj, name, int(new_val))
+        # for string in double qoutes
+        new_val = " ".join(value)
+        result = self.handle_type(new_val)
+        val_to_insert = conversion_dict[result['type']](result['val'])
+        setattr(obj, name, val_to_insert)
         obj.save()
 
     def is_float(self, num):
@@ -150,6 +157,26 @@ class HBNBCommand(cmd.Cmd):
             return False
         except ValueError:
             return True
+
+    def get_str(self, string):
+        if string[0] == '"':
+            return re.search('"[^"]*"', string).group()[1:-1]
+        if string[0].isalpha():
+            return string.split()[0]
+
+    def handle_type(self, string):
+        result = {}
+        if string[0] == '"' or string[0].isalpha():
+            result["val"] = self.get_str(string)
+            result["type"] = "str"
+            return result
+        value = string.split()[0]
+        result["val"] = value
+        if self.is_float(value) == True:
+            result["type"] = "float"
+        else:
+            result["type"] = "int"
+        return result
 
     def get_by_id(self, class_name, id):
         """ return obj if exist in storage otherwise return False"""
