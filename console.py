@@ -5,6 +5,7 @@ import cmd
 from models.base_model import BaseModel
 import models
 
+
 class HBNBCommand(cmd.Cmd):
     """Console class"""
 
@@ -20,7 +21,7 @@ class HBNBCommand(cmd.Cmd):
         """Exit the program when it's called"""
         print()
         return True
-    
+
     def emptyline(self):
         """Override emptyline method to do nothing"""
         pass
@@ -66,7 +67,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
         elif len(args) == 1:
-            if args[0] in self.cllass_mapping:
+            if args[0] not in self.class_mapping:
                 print("** instance id missing **")
             else:
                 print("** class doesn't exist **")
@@ -74,14 +75,31 @@ class HBNBCommand(cmd.Cmd):
             class_name = args[0]
             obj_id = args[1]
             all_objs = models.storage.all()
-            key = f"{class_name}.{instance_id}"
+            key = f"{class_name}.{obj_id}"
             if key in all_objs:
-                del all_obj[key]
+                del all_objs[key]
                 models.storage.save()
             else:
                 print("** no instance found **")
 
+    def do_all(self, arg):
+        """ Show All instance """
+        model_name = arg
+        if arg and model_name not in self.class_mapping:
+            print("** class doesn't exist **")
+            return
 
+        list_objs = []
+        all_objs = models.storage.all().items()
+        if arg:
+            for key, value in all_objs:
+                if type(value) == self.class_mapping[model_name]:
+                    list_objs.append(str(value))
+            return print(list_objs)
+
+        for key, value in all_objs:
+            list_objs.append(str(value))
+        print(list_objs)
 
 
 if __name__ == '__main__':
