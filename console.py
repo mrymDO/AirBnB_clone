@@ -4,6 +4,8 @@
 import cmd
 from models.base_model import BaseModel
 import models
+import re
+import shlex
 
 
 class HBNBCommand(cmd.Cmd):
@@ -67,7 +69,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
         elif len(args) == 1:
-            if args[0] not in self.class_mapping:
+            if args[0] in self.class_mapping:
                 print("** instance id missing **")
             else:
                 print("** class doesn't exist **")
@@ -100,6 +102,83 @@ class HBNBCommand(cmd.Cmd):
         for key, value in all_objs:
             list_objs.append(str(value))
         print(list_objs)
+
+    def do_update(self, args):
+        tokens = shlex.split(args)
+        args_len = len(tokens)
+
+        if args_len == 0:
+            print("** class name missing **")
+            return
+        class_name = tokens[0]
+        if args_len == 1:
+            if class_name not in self.class_mapping:
+                print("** class doesn't exist **")
+            else:
+                print("** instance id missing **")
+            return
+        id = tokens[1]
+        instance = self.get_by_id(class_name, id)
+        if args_len == 2:
+            if instance == False:
+                print("** no instance found **")
+            else:
+                print("** attribute name missing **")
+            return
+
+        if args_len == 3:
+            print("** value missing **")
+            return
+
+        attribute_name = tokens[2]
+        attribute_value = tokens[3]
+        type_attrb_val = self.handle_type(attribute_value)
+
+        if hasattr(instance, attribute_name):
+            instance_attr_type = getattr(
+                instance, attribute_name).__class__.__name__
+            if instance_attr_type == type_attrb_val["type"].__name__:
+                setattr(instance, attribute_name,
+                        type_attrb_val["type"](attribute_value))
+                instance.save()
+        else:
+            setattr(instance, attribute_name,
+                    type_attrb_val["type"](attribute_value))
+            instance.save()
+
+    def is_float(self, num):
+        try:
+            int(num)
+            return False
+        except ValueError:
+            return True
+
+    def get_str(self, string):
+        if string[0] == '"':
+            return re.search('"[^"]*"', string).group()[1:-1]
+        if string[0].isalpha():
+            return string.split()[0]
+
+    def handle_type(self, string):
+        result = {}
+        if string[0].isalpha():
+            result["val"] = self.get_str(string)
+            result["type"] = str
+            return result
+        value = string.split()[0]
+        result["val"] = value
+        if self.is_float(value) == True:
+            result["type"] = float
+        else:
+            result["type"] = int
+        return result
+
+    def get_by_id(self, class_name, id):
+        """ return obj if exist in storage otherwise return False"""
+        key = f"{class_name}.{id}"
+        if key in models.storage.all():
+            return models.storage.all()[key]
+        return False
 
 
 if __name__ == '__main__':
