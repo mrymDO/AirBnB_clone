@@ -94,19 +94,26 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all string representation of all instances"""
-        all_objs = models.storage.all()
-        list_str = []
+        """ Show All instance """
+        model_name = arg
+        if arg and model_name not in self.class_mapping:
+            print("** class doesn't exist **")
+            return
+
+        list_objs = []
+        all_objs = models.storage.all().items()
         if arg:
-            if arg in self.class_mapping:
-                for obj in all_objs.values():
-                    list_str.append(str(obj))
-            else:
-                print("** class doesn't exist **")
-        else:
-            for obj in all_objs.values():
-                list_str.append(str(obj))
-        print(list_str)
+            for key, value in all_objs:
+                if type(value) == self.class_mapping[model_name]:
+                    list_objs.append(str(value))
+            if (len(list_objs) > 0):
+                print(list_objs)
+            return
+
+        for key, value in all_objs:
+            list_objs.append(str(value))
+        if (len(list_objs) > 0):
+            print(list_objs)
 
     def do_update(self, args):
         """update"""
