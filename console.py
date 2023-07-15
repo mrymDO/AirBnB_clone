@@ -43,8 +43,8 @@ class HBNBCommand(cmd.Cmd):
         if len(arg_list) == 0:
             print("** class name missing **")
         else:
-            if arg[0] in self.class_mapping:
-                obj = self.class_mapping[arg]()
+            if arg_list[0] in self.class_mapping:
+                obj = self.class_mapping[arg_list[0]]()
                 obj.save()
                 print(obj.id)
             else:
