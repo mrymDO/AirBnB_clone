@@ -119,7 +119,7 @@ class HBNBCommand(cmd.Cmd):
         args_len = len(tokens)
 
         if args_len == 0:
-            print("** class naddme missing **")
+            print("** class name missing **")
         elif args_len == 1:
             if tokens[0] not in self.class_mapping:
                 print("** class doesn't exist **")
@@ -129,7 +129,7 @@ class HBNBCommand(cmd.Cmd):
             id = tokens[1]
             instance = self.get_by_id(tokens[0], id)
             if instance == False:
-                print("** no instance found **")
+                print("** no instance sfound **")
             else:
                 print("** attribute name missing **")
         elif args_len == 3:
