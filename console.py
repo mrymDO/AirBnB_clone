@@ -44,10 +44,9 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             if arg[0] in self.class_mapping:
-                # obj = self.class_mapping[arg]()
-                # obj.save()
-                # print(obj.id)
-                pass
+                obj = self.class_mapping[arg]()
+                obj.save()
+                print(obj.id)
             else:
                 print("** class doesn't exist **")
 
