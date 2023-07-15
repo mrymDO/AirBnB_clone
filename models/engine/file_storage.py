@@ -12,22 +12,23 @@ from models.state import State
 from models.amenity import Amenity
 
 
+class_mapping = {
+    'BaseModel': BaseModel,
+    'User': User,
+    'State': State,
+    'City': City,
+    'Amenity': Amenity,
+    'Place': Place,
+    'Review': Review
+}
+
+
 class FileStorage:
     """
     serializes instances to a JSON file and deserializes JSON file to instances
     """
     __file_path = "file.json"
     __objects = {}
-
-    class_mapping = {
-        'BaseModel': BaseModel,
-        'User': User,
-        'State': State,
-        'City': City,
-        'Amenity': Amenity,
-        'Place': Place,
-        'Review': Review
-    }
 
     def all(self):
         """return the dictionary __objects"""
@@ -42,14 +43,13 @@ class FileStorage:
         """serializes __objects to the JSON file"""
         json_dict = {}
         storage_items = FileStorage.__objects.items()
+        for key, obj in storage_items:
+            json_dict[key] = obj.to_dict()
         with open(FileStorage.__file_path, "w", encoding="UTF-8") as f:
-            for key, obj in storage_items:
-                json_dict[key] = obj.to_dict()
             json.dump(json_dict, f)
 
     def reload(self):
         """Deserializes the JSON file to __objects"""
-        data = {}
         if not os.path.exists(FileStorage.__file_path):
             return
         with open(FileStorage.__file_path, 'r', encoding="UTF-8") as f:
