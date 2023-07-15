@@ -119,37 +119,32 @@ class HBNBCommand(cmd.Cmd):
 
         if args_len == 0:
             print("** class name missing **")
-            return
-        class_name = tokens[0]
-        if args_len == 1:
-            if class_name not in self.class_mapping:
+        elif args_len == 1:
+            if tokens[0] not in self.class_mapping:
                 print("** class doesn't exist **")
             else:
                 print("** instance id missing **")
-            return
-        id = tokens[1]
-        instance = self.get_by_id(class_name, id)
-        if args_len == 2:
+        elif args_len == 2:
+            id = tokens[1]
+            instance = self.get_by_id(tokens[0], id)
             if instance == False:
                 print("** no instance found **")
             else:
                 print("** attribute name missing **")
-            return
-
-        if args_len == 3:
+        elif args_len == 3:
             print("** value missing **")
-            return
+        else:
+            attribute_name = tokens[2]
+            attribute_value = tokens[3]
 
-        attribute_name = tokens[2]
-        attribute_value = tokens[3]
-
-        if attribute_name not in ["id", "created_at", "updated_at"]:
-            if hasattr(instance, attribute_name):
-                attr_type = type(getattr(instance, attribute_name))
-                setattr(instance, attribute_name, attr_type(attribute_value))
-            else:
-                setattr(instance, attribute_name, attribute_value)
-            instance.save()
+            if attribute_name not in ["id", "created_at", "updated_at"]:
+                if hasattr(instance, attribute_name):
+                    attr_type = type(getattr(instance, attribute_name))
+                    setattr(instance, attribute_name,
+                            attr_type(attribute_value))
+                else:
+                    setattr(instance, attribute_name, attribute_value)
+                instance.save()
 
     def get_by_id(self, class_name, id):
         """ return obj if exist in storage otherwise return False"""
