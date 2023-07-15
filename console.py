@@ -88,15 +88,14 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Show All instance """
         arg = shlex.split(args)
-        if arg and arg[0] not in self.class_mapping:
-            print("** class doesn't exist **")
-            return
-
         list_objs = []
         all_objs = models.storage.all().items()
-        if len(arg) > 0:
+        if arg and arg[0] not in self.class_mapping:
+            return print("** class doesn't exist **")
+
+        if arg:
             for key, value in all_objs:
-                if value["__class__"] in self.class_mapping:
+                if value.__class__.__name__ in self.class_mapping:
                     list_objs.append(str(value))
         else:
             for key, value in all_objs:
