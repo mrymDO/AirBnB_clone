@@ -2,6 +2,7 @@
 """Entry point of command interpreter"""
 
 import cmd
+import sys
 from models.base_model import BaseModel
 import models
 import re
@@ -23,6 +24,11 @@ class HBNBCommand(cmd.Cmd):
     }
 
     prompt = "(hbnb) "
+
+    def preloop(self):
+        """Prints if isatty is false"""
+        if not sys.__stdin__.isatty():
+            print('(hbnb)')
 
     def do_quit(self, arg):
         """ Quit command to exit the program"""
