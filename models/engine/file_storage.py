@@ -54,7 +54,7 @@ class FileStorage:
                 data = json.load(f)
             for key, obj_dict in data.items():
                 class_ = self.class_mapping.get(obj_dict["__class__"])
-                if class_ is not None:
+                if class_ != None:
                     obj = class_(**obj_dict)
                     FileStorage.__objects[key] = obj
         except FileNotFoundError:
