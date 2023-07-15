@@ -93,24 +93,24 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** no instance found **")
 
-    # def do_all(self, arg):
-    #     """ Show All instance """
-    #     model_name = arg
-    #     if arg and model_name not in self.class_mapping:
-    #         print("** class doesn't exist **")
-    #         return
+    def do_all(self, args):
+        """ Show All instance """
+        arg = shlex.split(args)
+        if arg and arg[0] not in self.class_mapping:
+            print("** class doesn't exist **")
+            return
 
-    #     list_objs = []
-    #     all_objs = models.storage.all().items()
-    #     if arg:
-    #         for key, value in all_objs:
-    #             if type(value) == self.class_mapping[model_name]:
-    #                 list_objs.append(str(value))
-    #         return print(list_objs)
-
-    #     for key, value in all_objs:
-    #         list_objs.append(str(value))
-    #     print(list_objs)
+        list_objs = []
+        all_objs = models.storage.all().items()
+        if len(arg) > 0:
+            for key, value in all_objs:
+                if value["__class__"] in self.class_mapping:
+                    list_objs.append(str(value))
+            print(list_objs)
+        else:
+            for key, value in all_objs:
+                list_objs.append(str(value))
+            print(list_objs)
 
     # def do_update(self, args):
     #     """update"""
