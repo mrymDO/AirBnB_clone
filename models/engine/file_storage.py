@@ -43,15 +43,14 @@ class FileStorage:
         json_dict = {}
         for key, obj in FileStorage.__objects.items():
             json_dict[key] = obj.to_dict()
-        json_string = json.dumps(json_dict)
         with open(FileStorage.__file_path, "w") as f:
-            f.write(json_string)
+            json.dump(json_dict, f)
 
     def reload(self):
         """Deserializes the JSON file to __objects"""
         try:
-            with open(FileStorage.__file_path, mode='r', encoding='utf-8') as f:
-                data = json.loads(f.read())
+            with open(FileStorage.__file_path, 'r') as f:
+                data = json.load(f)
                 for key, obj_dict in data.items():
                     class_name, obj_id = key.split('.')
                     class_ = self.class_mapping.get(class_name)
