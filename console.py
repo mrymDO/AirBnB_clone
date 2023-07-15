@@ -25,11 +25,6 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
-    def preloop(self):
-        """Prints if isatty is false"""
-        if not sys.__stdin__.isatty():
-            print('(hbnb)')
-
     def do_quit(self, arg):
         """ Quit command to exit the program"""
         return True
@@ -124,7 +119,7 @@ class HBNBCommand(cmd.Cmd):
         args_len = len(tokens)
 
         if args_len == 0:
-            print("** class name missing **")
+            print("** class naddme missing **")
         elif args_len == 1:
             if tokens[0] not in self.class_mapping:
                 print("** class doesn't exist **")
