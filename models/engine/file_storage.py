@@ -43,13 +43,13 @@ class FileStorage:
         json_dict = {}
         for key, obj in FileStorage.__objects.items():
             json_dict[key] = obj.to_dict()
-        with open(FileStorage.__file_path, "w") as f:
+        with open(FileStorage.__file_path, "w", encoding="UTF-8") as f:
             json.dump(json_dict, f)
 
     def reload(self):
         """Deserializes the JSON file to __objects"""
         try:
-            with open(FileStorage.__file_path, 'r') as f:
+            with open(FileStorage.__file_path, 'r', encoding="UTF-8") as f:
                 data = json.load(f)
                 for key, obj_dict in data.items():
                     class_name, obj_id = key.split('.')
