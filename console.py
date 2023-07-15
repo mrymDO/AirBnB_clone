@@ -18,9 +18,9 @@ class HBNBCommand(cmd.Cmd):
     """Console class"""
 
     class_mapping = {
-            'BaseModel': BaseModel, 'User': User, 'State': State, 'City': City,
-            'Amenity': Amenity, 'Place': Place, 'Review': Review
-            }
+        'BaseModel': BaseModel, 'User': User, 'State': State, 'City': City,
+        'Amenity': Amenity, 'Place': Place, 'Review': Review
+    }
 
     prompt = "(hbnb) "
 
@@ -94,23 +94,19 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
 
     def do_all(self, arg):
-        """ Show All instance """
-        model_name = arg
-        if arg and model_name not in self.class_mapping:
-            print("** class doesn't exist **")
-            return
-
-        list_objs = []
-        all_objs = models.storage.all().items()
+        """Prints all string representation of all instances"""
+        all_objs = models.storage.all()
+        list_str = []
         if arg:
-            for key, value in all_objs:
-                if type(value) == self.class_mapping[model_name]:
-                    list_objs.append(str(value))
-            return print(list_objs)
-
-        for key, value in all_objs:
-            list_objs.append(str(value))
-        print(list_objs)
+            if arg in self.class_mapping:
+                for obj in all_objs.values():
+                    list_str.append(str(obj))
+            else:
+                print("** class doesn't exist **")
+        else:
+            for obj in all_objs.values():
+                list_str.append(str(obj))
+        print(list_str)
 
     def do_update(self, args):
         """update"""

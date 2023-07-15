@@ -56,5 +56,5 @@ class FileStorage:
                 if class_ is not None:
                     obj = class_(**obj_dict)
                     FileStorage.__objects[key] = obj
-        except Exception:
+        except FileNotFoundError:
             pass
