@@ -51,7 +51,7 @@ class FileStorage:
         """Deserializes the JSON file to __objects"""
         try:
             with open(FileStorage.__file_path, mode='r', encoding='utf-8') as f:
-                data = json.load(f.read())
+                data = json.loads(f.read())
                 for key, obj_dict in data.items():
                     class_name, obj_id = key.split('.')
                     class_ = self.class_mapping.get(class_name)
