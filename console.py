@@ -106,10 +106,10 @@ class HBNBCommand(cmd.Cmd):
             for key, value in all_objs:
                 if value["__class__"] in self.class_mapping:
                     list_objs.append(str(value))
-            print(list_objs)
         else:
             for key, value in all_objs:
                 list_objs.append(str(value))
+        if len(list_objs) > 0:
             print(list_objs)
 
     def do_update(self, args):
