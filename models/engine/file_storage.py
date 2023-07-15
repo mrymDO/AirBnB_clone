@@ -47,7 +47,8 @@ class FileStorage:
             json.dump(json_dict, f)
 
     def reload(self):
-        """Deserializes the JSON file to __objects"""&
+        """Deserializes the JSON file to __objects"""
+        data = {}
         try:
             with open(FileStorage.__file_path, 'r', encoding="UTF-8") as f:
                 data = json.load(f)
