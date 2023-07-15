@@ -6,12 +6,21 @@ from models.base_model import BaseModel
 import models
 import re
 import shlex
+from models.user import User
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.amenity import Amenity
 
 
 class HBNBCommand(cmd.Cmd):
     """Console class"""
 
-    class_mapping = {'BaseModel': BaseModel}
+    class_mapping = {
+            'BaseModel': BaseModel, 'User': User, 'State': State, 'City': City,
+            'Amenity': Amenity, 'Place': Place, 'Review': Review
+            }
 
     prompt = "(hbnb) "
 
@@ -104,6 +113,7 @@ class HBNBCommand(cmd.Cmd):
         print(list_objs)
 
     def do_update(self, args):
+        """update"""
         tokens = shlex.split(args)
         args_len = len(tokens)
 

@@ -76,6 +76,5 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(my_new_model.updated_at, datetime)
 
 
-
 if __name__ == '__main__':
     unittest.main()
