@@ -39,7 +39,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Creates a new instance of BaseModel"""
-        if not arg:
+        if len(arg) == 0:
             print("** class name missing **")
         else:
             if arg in self.class_mapping:
