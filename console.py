@@ -52,7 +52,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         """Prints string representation of an instance"""
-        args = arg.split()
+        args = shlex.split(arg)
         if len(args) == 0:
             print("** class name missing **")
         elif len(args) == 1:
@@ -67,7 +67,7 @@ class HBNBCommand(cmd.Cmd):
                 key = f"{class_name}.{obj_id}"
                 all_objs = models.storage.all()
                 if key in all_objs:
-                    print(all_objs[key])
+                    print(str(all_objs[key]))
                 else:
                     print("** no instance found **")
             else:
