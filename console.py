@@ -63,15 +63,15 @@ class HBNBCommand(cmd.Cmd):
         else:
             class_name = args[0]
             obj_id = args[1]
-            if class_name in self.class_mapping:
-                key = f"{class_name}.{obj_id}"
-                all_objs = models.storage.all()
-                if key in all_objs:
-                    print(str(all_objs[key]))
-                else:
-                    print("** no instance found **")
-            else:
+            key = f"{class_name}.{obj_id}"
+            all_objs = models.storage.all()
+
+            if class_name not in self.class_mapping:
                 print("** class doesn't exist **")
+            elif key not in all_objs:
+                print("** no instance found **")
+            else:
+                print(str(all_objs[key]))
 
     # def do_destroy(self, arg):
     #     """Deletes an instance based on the class name and id"""
