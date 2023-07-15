@@ -26,6 +26,7 @@ class BaseModel():
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+        if self not in models.storage.all().values():
             models.storage.new(self)
 
     def save(self):
