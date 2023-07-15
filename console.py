@@ -80,7 +80,7 @@ class HBNBCommand(cmd.Cmd):
         obj_id = args[1]
         key = f"{class_name}.{obj_id}"
         all_objs = models.storage.all()
-        if len(args) == 2 and key not in all_objs:
+        if len(args) >= 2 and key not in all_objs:
             return print("** no instance found **")
         del all_objs[key]
         models.storage.save()
