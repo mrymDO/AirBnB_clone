@@ -35,7 +35,7 @@ class FileStorage:
 
     def new(self, obj):
         """sets in __objects the obj with key <obj class name>.id"""
-        if obj:
+        if obj and isinstance(obj, BaseModel):
             key = obj.__class__.__name__ + '.' + obj.id
             FileStorage.__objects[key] = obj
 
