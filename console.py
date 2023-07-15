@@ -37,17 +37,17 @@ class HBNBCommand(cmd.Cmd):
         """Override emptyline method to do nothing"""
         pass
 
-    # def do_create(self, arg):
-    #     """Creates a new instance of BaseModel"""
-    #     if not arg:
-    #         print("** class name missing **")
-    #     else:
-    #         if arg in self.class_mapping:
-    #             obj = self.class_mapping[arg]()
-    #             obj.save()
-    #             print(obj.id)
-    #         else:
-    #             print("** class doesn't exist **")
+    def do_create(self, arg):
+        """Creates a new instance of BaseModel"""
+        if not arg:
+            print("** class name missing **")
+        else:
+            if arg in self.class_mapping:
+                obj = self.class_mapping[arg]()
+                obj.save()
+                print(obj.id)
+            else:
+                print("** class doesn't exist **")
 
     # def do_show(self, arg):
     #     """Prints string representation of an instance"""
