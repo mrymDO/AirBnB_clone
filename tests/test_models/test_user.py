@@ -28,8 +28,8 @@ class TestUser(unittest.TestCase):
         all_objs = storage.all()
         user = User()
 
-        #self.assertIn(self.user1.id, all_objs.keys())
-        #self.assertIn(self.user2.id, all_objs.keys())
+        self.assertIn(f"User.{self.user1.id}", all_objs.keys())
+        self.assertIn(f"User.{self.user2.id}", all_objs.keys())
 
         self.assertNotEqual(self.user1.id, self.user2.id)
 
