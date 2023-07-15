@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 """Store Objects converted to Json"""
 
-from models.base_model import BaseModel
 import json
+import os
+from models.base_model import BaseModel
 from models.user import User
 from models.city import City
 from models.place import Place
@@ -48,7 +49,7 @@ class FileStorage:
 
     def reload(self):
         """Deserializes the JSON file to __objects"""
-        try:
+        if os.path.exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, 'r') as f:
                 data = json.load(f)
                 for key, obj_dict in data.items():
@@ -57,5 +58,3 @@ class FileStorage:
                     if class_ is not None:
                         obj = class_(**obj_dict)
                         FileStorage.__objects[key] = obj
-        except Exception:
-            pass
