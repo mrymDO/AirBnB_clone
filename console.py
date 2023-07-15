@@ -133,7 +133,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** attribute name missing **")
         elif args_len == 3:
-            print("** value missing **")
+            print("** value missssing **")
         else:
             attribute_name = tokens[2]
             attribute_value = tokens[3]
