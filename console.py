@@ -119,33 +119,32 @@ class HBNBCommand(cmd.Cmd):
         args_len = len(tokens)
 
         if args_len == 0:
-            print("** class name missing **")
-        elif args_len == 1:
-            if tokens[0] not in self.class_mapping:
-                print("** class doesn't exist **")
-            else:
-                print("** instance id missing **")
-        elif args_len == 2:
+            return print("** class name missing **")
+        if args_len >= 1 and tokens[0] not in self.class_mapping:
+            return print("** class doesn't exist **")
+        if args_len == 1:
+            return print("** instance id missing **")
+        if args_len >= 2:
             id = tokens[1]
             instance = self.get_by_id(tokens[0], id)
             if instance == False:
-                print("** no instance sfound **")
-            else:
-                print("** attribute name missing **")
-        elif args_len == 3:
-            print("** value missssing **")
-        else:
-            attribute_name = tokens[2]
-            attribute_value = tokens[3]
+                return print("** no instance found **")
+        if args_len == 2:
+            return print("** attribute name missing **")
+        if args_len == 3:
+            return print("** value missing **")
 
-            if attribute_name not in ["id", "created_at", "updated_at"]:
-                if hasattr(instance, attribute_name):
-                    attr_type = type(getattr(instance, attribute_name))
-                    setattr(instance, attribute_name,
-                            attr_type(attribute_value))
-                else:
-                    setattr(instance, attribute_name, attribute_value)
-                instance.save()
+        attribute_name = tokens[2]
+        attribute_value = tokens[3]
+
+        if attribute_name not in ["id", "created_at", "updated_at"]:
+            if hasattr(instance, attribute_name):
+                attr_type = type(getattr(instance, attribute_name))
+                setattr(instance, attribute_name,
+                        attr_type(attribute_value))
+            else:
+                setattr(instance, attribute_name, attribute_value)
+            instance.save()
 
     def get_by_id(self, class_name, id):
         """ return obj if exist in storage otherwise return False"""
