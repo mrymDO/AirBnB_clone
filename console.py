@@ -42,13 +42,12 @@ class HBNBCommand(cmd.Cmd):
         arg_list = shlex.split(arg)
         if len(arg_list) == 0:
             print("** class name missing **")
+        elif arg_list[0] not in self.class_mapping:
+            print("** class doesn't exist **")
         else:
-            if arg_list[0] in self.class_mapping:
-                obj = self.class_mapping[arg_list[0]]()
-                obj.save()
-                print(obj.id)
-            else:
-                print("** class doesn't exist **")
+            obj = self.class_mapping[arg_list[0]]()
+            print(obj.id)
+            obj.save()
 
     def do_show(self, arg):
         """Prints string representation of an instance"""
@@ -71,7 +70,7 @@ class HBNBCommand(cmd.Cmd):
             elif key not in all_objs:
                 print("** no instance found **")
             else:
-                print(str(all_objs[key]))
+                print(all_objs[key])
 
     # def do_destroy(self, arg):
     #     """Deletes an instance based on the class name and id"""
