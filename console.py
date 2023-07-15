@@ -41,6 +41,8 @@ class HBNBCommand(cmd.Cmd):
         """Creates a new instance of BaseModel"""
         if len(arg) == 0:
             print("** class name missing **")
+        elif len(arg) == 1 and arg not in self.class_mapping:
+            print("** class doesn't exist **")
         # else:
         #     if arg in self.class_mapping:
         #         obj = self.class_mapping[arg]()
