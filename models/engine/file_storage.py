@@ -2,7 +2,7 @@
 """Store Objects converted to Json"""
 
 import json
-
+import os
 from models.base_model import BaseModel
 from models.user import User
 from models.city import City
@@ -50,13 +50,12 @@ class FileStorage:
     def reload(self):
         """Deserializes the JSON file to __objects"""
         data = {}
-        try:
-            with open(FileStorage.__file_path, 'r', encoding="UTF-8") as f:
-                data = json.load(f)
-                for key, obj_dict in data.items():
-                    class_ = self.class_mapping.get(obj_dict.get("__class__"))
-                    if class_ != None:
-                        obj = class_(**obj_dict)
-                        FileStorage.__objects[key] = obj
-        except FileNotFoundError:
-            pass
+        if not os.path.exists(FileStorage.__file_path):
+            return
+        with open(FileStorage.__file_path, 'r', encoding="UTF-8") as f:
+            data = json.load(f)
+            for key, obj_dict in data.items():
+                class_ = self.class_mapping.get(obj_dict.get("__class__"))
+                if class_ != None:
+                    obj = class_(**obj_dict)
+                    FileStorage.__objects[key] = obj
