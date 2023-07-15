@@ -54,24 +54,18 @@ class HBNBCommand(cmd.Cmd):
         """Prints string representation of an instance"""
         args = shlex.split(arg)
         if len(args) == 0:
-            print("** class name missing **")
-        elif len(args) >= 1:
-            if args[0] in self.class_mapping:
-                print("** instance id missing **")
-            else:
-                print("** class doesn't exist **")
-        else:
-            class_name = args[0]
-            obj_id = args[1]
-            key = f"{class_name}.{obj_id}"
-            all_objs = models.storage.all()
-
-            if class_name not in self.class_mapping:
-                print("** class doesn't exist **")
-            elif key not in all_objs:
-                print("** no instance found **")
-            else:
-                print(all_objs[key])
+            return print("** class name missing **")
+        if len(args) >= 1 and args[0] not in self.class_mapping:
+            return print("** class doesn't exist **")
+        if len(args) == 1:
+            return print("** instance id missing **")
+        class_name = args[0]
+        obj_id = args[1]
+        key = f"{class_name}.{obj_id}"
+        all_objs = models.storage.all()
+        if len(args) >= 2 and key not in all_objs:
+            return print("** no instance found **")
+        print(all_objs[key])
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id"""
