@@ -106,14 +106,11 @@ class HBNBCommand(cmd.Cmd):
             for key, value in all_objs:
                 if type(value) == self.class_mapping[model_name]:
                     list_objs.append(str(value))
-            if (len(list_objs) > 0):
-                print(list_objs)
-            return
+            return print(list_objs)
 
         for key, value in all_objs:
             list_objs.append(str(value))
-        if (len(list_objs) > 0):
-            print(list_objs)
+        print(list_objs)
 
     def do_update(self, args):
         """update"""
