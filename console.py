@@ -142,18 +142,13 @@ class HBNBCommand(cmd.Cmd):
 
         attribute_name = tokens[2]
         attribute_value = tokens[3]
-        type_attrb_val = self.handle_type(attribute_value)
 
-        if hasattr(instance, attribute_name):
-            instance_attr_type = getattr(
-                instance, attribute_name).__class__.__name__
-            if instance_attr_type == type_attrb_val["type"].__name__:
-                setattr(instance, attribute_name,
-                        type_attrb_val["type"](attribute_value))
-                instance.save()
-        else:
-            setattr(instance, attribute_name,
-                    type_attrb_val["type"](attribute_value))
+        if attribute_name not in ["id", "created_at", "updated_at"]:
+            if hasattr(instance, attribute_name):
+                attr_type = type(getattr(instance, attribute_name))
+                setattr(instance, attribute_name, attr_type(attribute_value))
+            else:
+                setattr(instance, attribute_name, attribute_value)
             instance.save()
 
     def is_float(self, num):
