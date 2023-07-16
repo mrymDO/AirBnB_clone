@@ -8,6 +8,7 @@ import os
 import json
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
+import pycodestyle
 
 
 class TestFileStorage(unittest.TestCase):
@@ -15,16 +16,21 @@ class TestFileStorage(unittest.TestCase):
 
     def setUp(self):
         """create new instance of FileStorage before each test"""
-
         self.storage = FileStorage()
         self.storage._FileStorage__objects = {}
         self.storage.class_mapping = {'BaseModel': BaseModel}
 
     def tearDown(self):
         """Clean up test environment"""
-        
+
         if os.path.exists(self.storage._FileStorage__file_path):
             os.remove(self.storage._FileStorage__file_path)
+
+    def test_pycodestyle(self):
+        """test pycodestyle"""
+        style = pycodestyle.StyleGuide()
+        result = style.check_files(['models/engine/file_storage.py'])
+        self.assertEqual(result.total_errors, 0)
 
     def test_all(self):
         """Test all() method returns FileStorage.__objects attr"""
