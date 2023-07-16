@@ -22,6 +22,7 @@ class TestFileStorage(unittest.TestCase):
 
     def tearDown(self):
         """Clean up test environment"""
+        
         if os.path.exists(self.storage._FileStorage__file_path):
             os.remove(self.storage._FileStorage__file_path)
 
@@ -84,7 +85,9 @@ class TestFileStorage(unittest.TestCase):
 
     def test_non_existing_file(self):
         """Test reload() method with non existing file"""
+        print(self.storage.all())
         self.storage.reload()
+        print(self.storage.all())
         self.assertEqual(len(self.storage.all()), 0)
 
 

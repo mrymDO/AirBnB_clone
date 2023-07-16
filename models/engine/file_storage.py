@@ -32,17 +32,17 @@ class FileStorage:
 
     def all(self):
         """return the dictionary __objects"""
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """sets in __objects the obj with key <obj class name>.id"""
         key = obj.__class__.__name__ + '.' + obj.id
-        FileStorage.__objects[key] = obj
+        self.__objects[key] = obj
 
     def save(self):
         """serializes __objects to the JSON file"""
         json_dict = {}
-        storage_items = FileStorage.__objects.items()
+        storage_items = self.__objects.items()
         for key, obj in storage_items:
             json_dict[key] = obj.to_dict()
         with open(FileStorage.__file_path, "w", encoding="UTF-8") as f:
@@ -57,4 +57,4 @@ class FileStorage:
             for key, obj_dict in data.items():
                 class_ = class_mapping.get(obj_dict.get("__class__"))
                 obj = class_(**obj_dict)
-                FileStorage.__objects[key] = obj
+                self.__objects[key] = obj

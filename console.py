@@ -117,7 +117,7 @@ class HBNBCommand(cmd.Cmd):
         if args_len >= 2:
             id = tokens[1]
             instance = self.get_by_id(tokens[0], id)
-            if instance == False:
+            if instance is False:
                 return print("** no instance found **")
         if args_len == 2:
             return print("** attribute name missing **")
